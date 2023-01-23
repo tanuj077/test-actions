@@ -11,10 +11,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: [ ubuntu-latest ]
+    name: Build Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -30,11 +32,11 @@ jobs:
          run: |
           mkdir cache-folder
           cd cache-folder
-          dd if=/dev/urandom of=file.txt count=200 bs=10485760
+          dd if=/dev/urandom of=file.txt count=200 bs=10480
           cat file.txt | openssl dgst -sha256 > sha256.txt
        - name: Cache
          uses: actions/cache@v3
          id: cache
          with:
            path: cache-folder
-           key: new_key
+           key: new_key_teeno_os
